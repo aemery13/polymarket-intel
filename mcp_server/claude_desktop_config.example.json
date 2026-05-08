@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "polymarket-intel": {
+      "command": "python",
+      "args": [
+        "/ABSOLUTE/PATH/TO/polymarket-intel/mcp_server/server.py"
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polymarket-intel-mcp"
+version = "1.0.0"
+description = "Classify Polymarket wallets as human or bot, score trading edge, and read open positions. MCP server for AI agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Polymarket Intel" }
+]
+keywords = [
+    "polymarket",
+    "mcp",
+    "model-context-protocol",
+    "prediction-markets",
+    "trading",
+    "wallet-intelligence",
+    "copy-trading",
+    "bot-detection",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "requests>=2.31.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "pydantic>=2.5.0",
+    "mcp[cli]>=1.0.0",
+]
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "supabase>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "httpx>=0.27.0",
+    "tabulate>=0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/aemery13/polymarket-intel"
+Repository = "https://github.com/aemery13/polymarket-intel"
+Documentation = "https://github.com/aemery13/polymarket-intel#readme"
+Issues = "https://github.com/aemery13/polymarket-intel/issues"
+
+# Entry points expose the MCP server as a CLI for Claude Desktop / Cursor /
+# any MCP client that uses the stdio transport. Users can run:
+#   polymarket-intel-mcp
+# after `pip install polymarket-intel-mcp`.
+[project.scripts]
+polymarket-intel-mcp = "mcp_server.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["core", "mcp_server"]
+
+# Marker the MCP registry uses to verify package ownership.
+# (Also place this in a comment in README.md as `<!-- mcp-name: io.github.YOUR_USERNAME/polymarket-intel -->`)
+[tool.hatch.metadata]
+allow-direct-references = false

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.aemery13/polymarket-intel",
+  "title": "Polymarket Wallet Intelligence",
+  "description": "Classifies Polymarket wallets as human or bot, scores their trading edge (0-10), and exposes their current open positions. Designed for AI agents building copy-trading or signal-following systems on Polymarket.",
+  "websiteUrl": "https://github.com/aemery13/polymarket-intel",
+  "repository": {
+    "url": "https://github.com/aemery13/polymarket-intel",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "polymarket-intel-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "POLYMARKET_INTEL_API_KEY",
+          "description": "Optional API key for higher rate limits and paid features. Anonymous access works at free-tier limits.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://polymarket-intel.up.railway.app/mcp",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "description": "Optional API key for higher rate limits.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "categories": ["finance", "data", "analysis"],
+      "tags": ["polymarket", "prediction-markets", "trading", "wallet-intelligence", "copy-trading"],
+      "license": "MIT"
+    }
+  }
+}

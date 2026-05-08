@@ -1,0 +1,48 @@
+# Smithery configuration: https://smithery.ai/docs/config#smitheryyaml
+#
+# This config registers polymarket-intel as a remote (hosted) MCP server.
+# Smithery clients will connect to our deployed HTTP endpoint; users only
+# need to supply an optional API key for higher rate limits.
+#
+# To deploy: push this file to GitHub, then run `smithery mcp publish` or
+# submit via https://smithery.ai/dashboard.
+
+startCommand:
+  type: http
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        description: >
+          Optional API key (format: pmi_xxxxx). Without one, you're on the
+          free tier (30 requests/minute). With one, you get the rate limit
+          configured for your tier (starter: 600/min, pro: 6000/min).
+        default: ""
+    required: []
+
+  commandFunction: |
+    (config) => ({
+      url: "https://polymarket-intel.up.railway.app/mcp",
+      headers: config.apiKey ? { "X-API-Key": config.apiKey } : {}
+    })
+
+# Metadata used for ranking + display on the marketplace
+description: >
+  Classify Polymarket wallets as human or bot, score their trading edge
+  (0-10), and stream their current open positions. Built for AI agents
+  designing copy-trading or signal-following strategies on Polymarket.
+  The historical scoring dataset grows daily.
+
+categories:
+  - finance
+  - data
+  - analysis
+
+tags:
+  - polymarket
+  - prediction-markets
+  - trading
+  - wallet-intelligence
+  - copy-trading
+  - bot-detection

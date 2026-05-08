@@ -1,0 +1,11 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "polymarket-intel",
+  "displayName": "Polymarket Wallet Intelligence",
+  "description": "Classify Polymarket wallets as human or bot, score their trading edge (0-10), and read their current open positions. Built for AI agents on copy-trading and signal-following stacks.",
+  "categories": ["finance", "data", "analysis"],
+  "tags": ["polymarket", "prediction-markets", "trading", "wallet-intelligence", "copy-trading", "bot-detection"],
+  "license": "MIT",
+  "homepage": "https://github.com/aemery13/polymarket-intel",
+  "repository": "https://github.com/aemery13/polymarket-intel"
+}
