@@ -23,7 +23,7 @@ startCommand:
 
   commandFunction: |
     (config) => ({
-      url: "https://polymarket-intel.up.railway.app/mcp",
+      url: "https://polymarket-intel-production.up.railway.app/mcp",
       headers: config.apiKey ? { "X-API-Key": config.apiKey } : {}
     })
 

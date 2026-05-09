@@ -10,7 +10,7 @@ pip install polymarket-intel-mcp
 polymarket-intel-mcp
 
 # Or call the hosted REST API directly
-curl https://polymarket-intel.up.railway.app/wallet/0xf1528f12e645462c344799b62b1b421a6a4c64aa
+curl https://polymarket-intel-production.up.railway.app/wallet/0xf1528f12e645462c344799b62b1b421a6a4c64aa
 ```
 
 ## What it answers
@@ -33,8 +33,8 @@ This service runs every leaderboard wallet through behavioural fingerprinting (f
 | Surface     | Use case                                    | Setup                               |
 |-------------|---------------------------------------------|-------------------------------------|
 | MCP server  | Agent that needs tool-style access          | `pip install polymarket-intel-mcp`  |
-| REST API    | Custom HTTP integration, dashboards         | `curl https://polymarket-intel.up.railway.app/...` |
-| Hosted MCP  | Agent on any MCP-compatible client          | Add `https://polymarket-intel.up.railway.app/mcp` to client config |
+| REST API    | Custom HTTP integration, dashboards         | `curl https://polymarket-intel-production.up.railway.app/...` |
+| Hosted MCP  | Agent on any MCP-compatible client          | Add `https://polymarket-intel-production.up.railway.app/mcp` to client config |
 
 ## Architecture
 

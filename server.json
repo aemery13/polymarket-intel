@@ -31,7 +31,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://polymarket-intel.up.railway.app/mcp",
+      "url": "https://polymarket-intel-production.up.railway.app/mcp",
       "headers": [
         {
           "name": "X-API-Key",
