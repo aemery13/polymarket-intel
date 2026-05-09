@@ -35,3 +35,5 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 # snapshot job or the MCP server in a different container/cron.
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
 # Force rebuild: 1778327936
+
+# Force rebuild: 1778328256
