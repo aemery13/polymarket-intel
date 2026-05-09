@@ -33,4 +33,4 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # Default to running the FastAPI service. Override CMD to run the
 # snapshot job or the MCP server in a different container/cron.
-CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT}"]
+CMD sh -c "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}"
