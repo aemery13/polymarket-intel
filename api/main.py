@@ -75,10 +75,10 @@ client = PolymarketClient()
 repo = get_repository()
 
 
-# Mount the MCP server's streamable HTTP transport at /mcp.
-# This lets MCP clients (Claude Desktop, Cursor, Smithery's probe)
-# reach the server at https://your-domain/mcp without needing a
-# separate process or service.
+# FastMCP defaults its handler to /mcp, but we're mounting at /mcp,
+# which would double-prefix to /mcp/mcp. Set the inner path to /
+# so the final URL is /mcp on our domain.
+mcp_server.settings.streamable_http_path = "/"
 app.mount("/mcp", mcp_server.streamable_http_app())
 
 # ─────────────────────────────────────────────
