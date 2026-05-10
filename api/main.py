@@ -59,6 +59,13 @@ from mcp_server.server import mcp as mcp_server
 # every /mcp/* request would crash with "Task group is not initialized".
 # ─────────────────────────────────────────────
 mcp_server.settings.streamable_http_path = "/"
+# Railway's edge proxy uses internal hostnames that FastMCP's DNS-rebinding
+# protection rejects by default. Disable it — Railway already handles TLS
+# termination and DDoS protection at the edge.
+from mcp.server.transport_security import TransportSecuritySettings
+mcp_server.settings.transport_security = TransportSecuritySettings(
+    enable_dns_rebinding_protection=False,
+)
 _mcp_http_app = mcp_server.streamable_http_app()
 
 
