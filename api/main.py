@@ -31,6 +31,7 @@ Tiering rationale:
 from __future__ import annotations
 
 import time
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -50,6 +51,24 @@ from .auth import auth_dependency
 from .cache import cache
 from mcp_server.server import mcp as mcp_server
 
+
+# ─────────────────────────────────────────────
+# Pre-build the MCP HTTP app so we can share its lifespan with FastAPI.
+# FastAPI doesn't propagate lifespan to mounted sub-apps, so the MCP
+# session manager's task group would never start without this — and
+# every /mcp/* request would crash with "Task group is not initialized".
+# ─────────────────────────────────────────────
+mcp_server.settings.streamable_http_path = "/"
+_mcp_http_app = mcp_server.streamable_http_app()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Run the MCP session manager alongside FastAPI's lifespan."""
+    async with _mcp_http_app.router.lifespan_context(app):
+        yield
+
+
 # ─────────────────────────────────────────────
 # App setup
 # ─────────────────────────────────────────────
@@ -62,6 +81,7 @@ app = FastAPI(
     ),
     version="1.0.0",
     contact={"name": "Polymarket Intel API"},
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -74,12 +94,9 @@ app.add_middleware(
 client = PolymarketClient()
 repo = get_repository()
 
-
-# FastMCP defaults its handler to /mcp, but we're mounting at /mcp,
-# which would double-prefix to /mcp/mcp. Set the inner path to /
-# so the final URL is /mcp on our domain.
-mcp_server.settings.streamable_http_path = "/"
-app.mount("/mcp", mcp_server.streamable_http_app())
+# Mount the pre-built MCP app at /mcp. The lifespan above ensures
+# its session manager starts up alongside FastAPI's.
+app.mount("/mcp", _mcp_http_app)
 
 # ─────────────────────────────────────────────
 # Cache TTLs and DB-write debounce
