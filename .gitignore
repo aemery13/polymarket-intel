@@ -11,3 +11,17 @@ venv/
 *.zip
 dist/
 build/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# macOS junk
+.DS_Store
+
+# Old archives
+*.zip
+
+# Misc folders
+zzz/
