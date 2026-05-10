@@ -122,6 +122,67 @@ SCORE_PERSIST_DEBOUNCE_SECONDS = 3600
 # ─────────────────────────────────────────────
 # Health
 # ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+# Smithery's well-known server card.
+# ─────────────────────────────────────────────
+@app.get("/.well-known/mcp/server-card.json")
+def well_known_server_card() -> dict:
+    return {
+        "name": "polymarket-intel",
+        "version": "1.0.0",
+        "title": "Polymarket Wallet Intelligence",
+        "description": (
+            "Classify Polymarket wallets as human or bot, score their "
+            "trading edge, and read their current open positions."
+        ),
+        "transport": {
+            "type": "streamable-http",
+            "url": "https://polymarket-intel-production.up.railway.app/mcp/",
+        },
+        "capabilities": {
+            "tools": {"listChanged": False},
+            "resources": {"subscribe": False, "listChanged": False},
+            "prompts": {"listChanged": False},
+        },
+        "tools": [
+            {
+                "name": "score_polymarket_wallet",
+                "description": "Score a Polymarket wallet by address.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {"wallet_address": {"type": "string"}},
+                    "required": ["wallet_address"],
+                },
+            },
+            {
+                "name": "score_polymarket_user",
+                "description": "Score a Polymarket user by username.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {"username": {"type": "string"}},
+                    "required": ["username"],
+                },
+            },
+            {
+                "name": "get_polymarket_leaderboard",
+                "description": "Get the top wallets from the Polymarket leaderboard.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {"limit": {"type": "integer"}},
+                    "required": [],
+                },
+            },
+            {
+                "name": "get_open_positions",
+                "description": "Get a wallet's currently open positions.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {"wallet_address": {"type": "string"}},
+                    "required": ["wallet_address"],
+                },
+            },
+        ],
+    }
 @app.get("/")
 def root() -> dict:
     return {
