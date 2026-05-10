@@ -12,6 +12,18 @@ polymarket-intel-mcp
 # Or call the hosted REST API directly
 curl https://polymarket-intel-production.up.railway.app/wallet/0xf1528f12e645462c344799b62b1b421a6a4c64aa
 ```
+## How this fits with other Polymarket MCP servers
+
+There are several MCP servers covering Polymarket, each at a different layer:
+
+| Server | What it does | When to use it |
+|---|---|---|
+| **polymarket-intel** (this) | Wallet intelligence — classify human vs bot, score trading edge, read open positions | Deciding *whose* signals to follow |
+| graph-polymarket-mcp | Market data via The Graph subgraphs (20 tools, 8 subgraphs) | Reading raw on-chain market data |
+| whitmorelabs/polymarket-mcp | Slippage, liquidity, arbitrage, price feeds | Pricing your own trades |
+| joinQuantish/polymarket | Self-hosted trading agent | Running an autonomous bot |
+
+These complement each other. A copy-trading agent would use **polymarket-intel** to filter wallets worth following, then **graph-polymarket-mcp** to read the markets those wallets are betting on, then **whitmorelabs/polymarket-mcp** to size its own entries.
 
 ## What it answers
 
