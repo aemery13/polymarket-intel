@@ -13,6 +13,12 @@ polymarket-intel-mcp
 curl https://polymarket-intel-production.up.railway.app/wallet/0xf1528f12e645462c344799b62b1b421a6a4c64aa
 ```
 ## How this fits with other Polymarket MCP servers
+## Status
+
+**Latest:** v1.2 (May 2026) — classifier improved to distinguish active human grinders from HFT bots. See [release notes](https://github.com/aemery13/polymarket-intel/commits/main) and [v1.3 backlog issue](https://github.com/aemery13/polymarket-intel/issues) for what's next.
+
+A daily snapshot job runs at 08:00 UTC and re-scores the top 50 leaderboard wallets, building a historical dataset of classification stability over time.
+
 
 There are several MCP servers covering Polymarket, each at a different layer:
 
