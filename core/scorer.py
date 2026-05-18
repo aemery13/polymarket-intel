@@ -177,12 +177,23 @@ def _classify(sig: dict, tempo: dict) -> tuple[str, float, list[str]]:
     bot_score = 0.0   # accumulated evidence for bot
     human_score = 0.0
 
-    # ── Hard bot triggers
-    if sig["focus_ratio"] > FOCUS_RATIO_BOT:
-        bot_score += 0.6
-        codes.append(f"focus_ratio_{sig['focus_ratio']:.1f}_above_{FOCUS_RATIO_BOT}")
-
     holding_med = sig["holding"]["median_seconds"]
+    avg_bet = tempo.get("avg_bet_usd", 0)
+
+    # ── Hard bot triggers
+    # focus_ratio: # of trades / # of distinct markets. Bots concentrate.
+    # BUT: humans placing many small fills on one event also look concentrated.
+    # If holds are long (>1h), the wallet can't be an HFT bot — soften penalty.
+    if sig["focus_ratio"] > FOCUS_RATIO_BOT:
+        if holding_med >= 3600:
+            bot_score += 0.2
+            codes.append(
+                f"focus_ratio_{sig['focus_ratio']:.1f}_high_but_holds_{holding_med/3600:.1f}h"
+            )
+        else:
+            bot_score += 0.6
+            codes.append(f"focus_ratio_{sig['focus_ratio']:.1f}_above_{FOCUS_RATIO_BOT}")
+
     if 0 < holding_med < HOLDING_HFT_SECONDS:
         bot_score += 0.6
         codes.append(f"hft_holding_{holding_med:.0f}s")
@@ -205,8 +216,14 @@ def _classify(sig: dict, tempo: dict) -> tuple[str, float, list[str]]:
         codes.append("crypto_market_maker_pattern")
 
     if tempo["trades_per_day"] > TRADES_PER_DAY_HEAVY:
-        bot_score += 0.3
-        codes.append(f"high_velocity_{tempo['trades_per_day']:.0f}_trades_per_day")
+        if avg_bet >= 250:
+            bot_score += 0.1
+            codes.append(
+                f"high_velocity_{tempo['trades_per_day']:.0f}_per_day_but_avg_bet_${avg_bet:.0f}"
+            )
+        else:
+            bot_score += 0.3
+            codes.append(f"high_velocity_{tempo['trades_per_day']:.0f}_trades_per_day")
 
     # ── Human-positive signals
     if 1.0 <= sig["focus_ratio"] <= 8.0:
@@ -224,6 +241,14 @@ def _classify(sig: dict, tempo: dict) -> tuple[str, float, list[str]]:
     if sig["category"]["dominant"] != "Crypto" and sig["category"]["dominant_share"] < 0.95:
         human_score += 0.1
 
+    # Mid-to-large bets held for hours: classic human grinder placing
+    # real money on sports/news events, fragmenting across many fills.
+    # Tuned: $500 threshold (not $250) and +0.25 weight (not +0.4) so
+    # this signal doesn't over-promote borderline cases.
+    if avg_bet >= 500 and holding_med >= 3600:
+        human_score += 0.25
+        codes.append(f"meaningful_bets_${avg_bet:.0f}_with_long_holds")
+
     # Decide
     if bot_score >= 0.5 and bot_score > human_score:
         confidence = min(0.5 + bot_score / 2, 0.99)
@@ -232,6 +257,7 @@ def _classify(sig: dict, tempo: dict) -> tuple[str, float, list[str]]:
         confidence = min(0.5 + human_score, 0.95)
         return "human", round(confidence, 2), codes
     return "human", 0.5, codes  # default lean human if ambiguous
+
 
 
 # ─────────────────────────────────────────────
